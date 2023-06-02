@@ -1,0 +1,25 @@
+# https://taskfile.dev
+version: '3'
+vars:
+  BINFILE: ansible-summary
+
+tasks:
+  default:
+    cmds:
+      - go mod download
+      - CGO_ENABLED=0 go build cmd/* -o ./{{.BINFILE}}
+      - upx ./{{.BINFILE}}
+    # silent: true
+    # sources:
+    # - ./**/*
+    # method: checksum
+    # generates:
+    #   - "{{.BINFILE}}"
+
+  snapshot:
+    cmds:
+      - GITLAB_TOKEN="" goreleaser --clean --snapshot
+    
+  release:
+    cmds:
+      - GITLAB_TOKEN="" goreleaser --clean
