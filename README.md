@@ -1,5 +1,5 @@
 
-ansible-summary is a tool to resume the states of ansible tasks. I'm using it to get a report of how many tasks are in chaged state, ok, failures...
+ansible-summary is a tool to make a summary of the states of ansible tasks. I'm using it to get a report of how many tasks are in chaged state, ok, failures...
 
 The input of the file is the JSON log of ansible.
 
