@@ -8,12 +8,25 @@ import (
 	"github.com/sgaunet/ansible-summary/pkg/ansiblesummary"
 )
 
+var version string = "dev"
+
+func printVersion() {
+	fmt.Println(version)
+}
+
 func main() {
 	var inputFile string
 	var jsonFlag bool
+	var versionFlag bool
 	flag.StringVar(&inputFile, "input", "", "input file")
 	flag.BoolVar(&jsonFlag, "json", false, "output format as JSON")
+	flag.BoolVar(&versionFlag, "version", false, "print version")
 	flag.Parse()
+
+	if versionFlag {
+		printVersion()
+		os.Exit(0)
+	}
 
 	if inputFile == "" {
 		fmt.Println("input file is mandatory")
