@@ -1,5 +1,6 @@
-
 [![Go Report Card](https://goreportcard.com/badge/github.com/sgaunet/ansible-summary)](https://goreportcard.com/report/github.com/sgaunet/ansible-summary)
+[![GitHub release](https://img.shields.io/github/release/sgaunet/ansible-summary.svg)](https://github.com/sgaunet/ansible-summary/releases/latest)
+![GitHub Downloads](https://img.shields.io/github/downloads/sgaunet/ansible-summary/total)
 ![Test Coverage](https://raw.githubusercontent.com/wiki/sgaunet/ansible-summary/coverage-badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
