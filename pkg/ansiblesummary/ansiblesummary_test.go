@@ -1,6 +1,8 @@
 package ansiblesummary_test
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"testing"
 
@@ -105,6 +107,236 @@ func TestNewAnsibleSummaryFromFile(t *testing.T) {
 			// if !reflect.DeepEqual(got, tt.want) {
 			// 	t.Errorf("NewAnsibleSummaryFromFile() = %v, want %v", got, tt.want)
 			// }
+		})
+	}
+}
+
+func TestAnsibleSummary_HasChangedOrFailed(t *testing.T) {
+	tests := []struct {
+		name string
+		data *ansiblesummary.AnsibleSummary
+		want bool
+	}{
+		{
+			name: "no changes",
+			data: &ansiblesummary.AnsibleSummary{
+				Plays: []ansiblesummary.Plays{
+					{
+						Tasks: []ansiblesummary.Tasks{
+							{
+								Hosts: map[string]ansiblesummary.Host{
+									"host1": {Changed: false},
+									"host2": {Changed: false},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "has changes",
+			data: &ansiblesummary.AnsibleSummary{
+				Plays: []ansiblesummary.Plays{
+					{
+						Tasks: []ansiblesummary.Tasks{
+							{
+								Hosts: map[string]ansiblesummary.Host{
+									"host1": {Changed: false},
+									"host2": {Changed: true},
+								},
+							},
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "empty data",
+			data: &ansiblesummary.AnsibleSummary{},
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.data.HasChangedOrFailed()
+			assert.Equal(t, tt.want, result)
+		})
+	}
+}
+
+func TestAnsibleSummary_GetListOfTasksChanged(t *testing.T) {
+	data := &ansiblesummary.AnsibleSummary{}
+	result := data.GetListOfTasksChanged()
+	expected := []string{"to implement"}
+	assert.Equal(t, expected, result)
+}
+
+func TestNewOutput(t *testing.T) {
+	output := ansiblesummary.NewOutput()
+	assert.NotNil(t, output)
+}
+
+func TestOutput_WriteStatsJSON(t *testing.T) {
+	data := &ansiblesummary.AnsibleSummary{
+		Stats: map[string]ansiblesummary.Stat{
+			"host1": {
+				Ok:          5,
+				Changed:     1,
+				Failures:    0,
+				Unreachable: 0,
+				Skipped:     2,
+				Rescued:     0,
+				Ignored:     0,
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	output := ansiblesummary.NewOutput()
+	
+	// Use type assertion with the exact method signature from output.go
+	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
+		setter.SetOutput(&buf)
+		
+		err := output.WriteStatsJSON(data)
+		assert.NoError(t, err)
+		
+		result := buf.String()
+		assert.Contains(t, result, "host1")
+		assert.Contains(t, result, `"ok": 5`)
+		assert.Contains(t, result, `"changed": 1`)
+	} else {
+		// Test that the method doesn't error even if we can't capture output
+		err := output.WriteStatsJSON(data)
+		assert.NoError(t, err)
+	}
+}
+
+func TestOutput_WriteStatsHTML(t *testing.T) {
+	data := &ansiblesummary.AnsibleSummary{
+		Stats: map[string]ansiblesummary.Stat{
+			"host1": {
+				Ok:          5,
+				Changed:     1,
+				Failures:    0,
+				Unreachable: 0,
+				Skipped:     2,
+				Rescued:     0,
+				Ignored:     0,
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	output := ansiblesummary.NewOutput()
+	
+	// Use type assertion with the exact method signature
+	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
+		setter.SetOutput(&buf)
+		
+		errs := output.WriteStatsHTML(data)
+		assert.Empty(t, errs)
+		
+		result := buf.String()
+		assert.Contains(t, result, "host1")
+		assert.Contains(t, result, "ok=5")
+		assert.Contains(t, result, "changed=1")
+	} else {
+		// Test that the method doesn't error even if we can't capture output
+		errs := output.WriteStatsHTML(data)
+		assert.Empty(t, errs)
+	}
+}
+
+func TestOutput_WriteStats(t *testing.T) {
+	data := &ansiblesummary.AnsibleSummary{
+		Stats: map[string]ansiblesummary.Stat{
+			"host1": {
+				Ok:          5,
+				Changed:     1,
+				Failures:    0,
+				Unreachable: 0,
+				Skipped:     2,
+				Rescued:     0,
+				Ignored:     0,
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	output := ansiblesummary.NewOutput()
+	
+	// Use type assertion with the exact method signature
+	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
+		setter.SetOutput(&buf)
+		
+		errs := output.WriteStats(data)
+		assert.Empty(t, errs)
+		
+		result := buf.String()
+		assert.Contains(t, result, "host1")
+		assert.Contains(t, result, "ok= 5")
+		assert.Contains(t, result, "changed=1")
+	} else {
+		// Test that the method doesn't error even if we can't capture output
+		errs := output.WriteStats(data)
+		assert.Empty(t, errs)
+	}
+}
+
+func TestAnsibleSummary_PrintNameOfTaksNotOK(t *testing.T) {
+	tests := []struct {
+		name string
+		data *ansiblesummary.AnsibleSummary
+	}{
+		{
+			name: "with changed tasks",
+			data: &ansiblesummary.AnsibleSummary{
+				Plays: []ansiblesummary.Plays{
+					{
+						Tasks: []ansiblesummary.Tasks{
+							{
+								Task: ansiblesummary.Task{Name: "test task"},
+								Hosts: map[string]ansiblesummary.Host{
+									"host1": {Changed: true},
+									"host2": {Changed: false},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "no changed tasks",
+			data: &ansiblesummary.AnsibleSummary{
+				Plays: []ansiblesummary.Plays{
+					{
+						Tasks: []ansiblesummary.Tasks{
+							{
+								Task: ansiblesummary.Task{Name: "test task"},
+								Hosts: map[string]ansiblesummary.Host{
+									"host1": {Changed: false},
+									"host2": {Changed: false},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// This method prints to stdout, so we just test it doesn't panic
+			assert.NotPanics(t, func() {
+				tt.data.PrintNameOfTaksNotOK()
+			})
 		})
 	}
 }
