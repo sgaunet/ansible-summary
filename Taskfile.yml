@@ -16,6 +16,11 @@ tasks:
       - task: sqlc
       - CGO_ENABLED=0 go build .
 
+  vuln:
+    desc: "Check for vulnerabilities"
+    cmds:
+      - govulncheck ./...
+
   linter:
     desc: "Run linter"
     cmds:
