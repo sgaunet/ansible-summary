@@ -124,6 +124,54 @@
           "store_path": "/nix/store/iibmw8lki8rf2kanzpg6c6n9llfq1737-goreleaser-2.9.0"
         }
       }
+    },
+    "govulncheck@latest": {
+      "last_modified": "2025-06-20T02:24:11Z",
+      "resolved": "github:NixOS/nixpkgs/076e8c6678d8c54204abcb4b1b14c366835a58bb#govulncheck",
+      "source": "devbox-search",
+      "version": "1.1.4",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/3sibk0xay3jncsayvk9bh3bb0wiqib2r-govulncheck-1.1.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/3sibk0xay3jncsayvk9bh3bb0wiqib2r-govulncheck-1.1.4"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/f90gg124a216wlgqdkdbdqq4pghmi4li-govulncheck-1.1.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/f90gg124a216wlgqdkdbdqq4pghmi4li-govulncheck-1.1.4"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fcfpbi757yhx440d5waay0p883jzanp3-govulncheck-1.1.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fcfpbi757yhx440d5waay0p883jzanp3-govulncheck-1.1.4"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6fqrxllrx6b0s4jib7pwcq38nbihqd9p-govulncheck-1.1.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6fqrxllrx6b0s4jib7pwcq38nbihqd9p-govulncheck-1.1.4"
+        }
+      }
     }
   }
 }
