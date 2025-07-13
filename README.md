@@ -2,6 +2,10 @@
 [![GitHub release](https://img.shields.io/github/release/sgaunet/ansible-summary.svg)](https://github.com/sgaunet/ansible-summary/releases/latest)
 ![GitHub Downloads](https://img.shields.io/github/downloads/sgaunet/ansible-summary/total)
 ![Test Coverage](https://raw.githubusercontent.com/wiki/sgaunet/ansible-summary/coverage-badge.svg)
+[![Linter](https://github.com/sgaunet/ansible-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/sgaunet/ansible-summary/actions/workflows/linter.yml)
+[![Snapshot](https://github.com/sgaunet/ansible-summary/actions/workflows/snapshot.yml/badge.svg)](https://github.com/sgaunet/ansible-summary/actions/workflows/snapshot.yml)
+[![Release](https://github.com/sgaunet/ansible-summary/actions/workflows/release.yml/badge.svg)](https://github.com/sgaunet/ansible-summary/actions/workflows/release.yml)
+[![Coverage Badge](https://github.com/sgaunet/ansible-summary/actions/workflows/coverage.yml/badge.svg)](https://github.com/sgaunet/ansible-summary/actions/workflows/coverage.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ansible-summary is a tool to make a summary of the states of ansible tasks. I'm using it to get a report of how many tasks are in chaged state, ok, failures...
