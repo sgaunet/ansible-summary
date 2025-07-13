@@ -2,7 +2,6 @@ package ansiblesummary_test
 
 import (
 	"bytes"
-	"io"
 	"os"
 	"testing"
 
@@ -198,22 +197,16 @@ func TestOutput_WriteStatsJSON(t *testing.T) {
 	var buf bytes.Buffer
 	output := ansiblesummary.NewOutput()
 	
-	// Use type assertion with the exact method signature from output.go
-	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
-		setter.SetOutput(&buf)
+	// Since NewOutput now returns *output, we can directly call SetOutput
+	output.SetOutput(&buf)
 		
-		err := output.WriteStatsJSON(data)
-		assert.NoError(t, err)
-		
-		result := buf.String()
-		assert.Contains(t, result, "host1")
-		assert.Contains(t, result, `"ok": 5`)
-		assert.Contains(t, result, `"changed": 1`)
-	} else {
-		// Test that the method doesn't error even if we can't capture output
-		err := output.WriteStatsJSON(data)
-		assert.NoError(t, err)
-	}
+	err := output.WriteStatsJSON(data)
+	assert.NoError(t, err)
+	
+	result := buf.String()
+	assert.Contains(t, result, "host1")
+	assert.Contains(t, result, `"ok": 5`)
+	assert.Contains(t, result, `"changed": 1`)
 }
 
 func TestOutput_WriteStatsHTML(t *testing.T) {
@@ -234,22 +227,15 @@ func TestOutput_WriteStatsHTML(t *testing.T) {
 	var buf bytes.Buffer
 	output := ansiblesummary.NewOutput()
 	
-	// Use type assertion with the exact method signature
-	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
-		setter.SetOutput(&buf)
-		
-		errs := output.WriteStatsHTML(data)
-		assert.Empty(t, errs)
-		
-		result := buf.String()
-		assert.Contains(t, result, "host1")
-		assert.Contains(t, result, "ok=5")
-		assert.Contains(t, result, "changed=1")
-	} else {
-		// Test that the method doesn't error even if we can't capture output
-		errs := output.WriteStatsHTML(data)
-		assert.Empty(t, errs)
-	}
+	output.SetOutput(&buf)
+	
+	errs := output.WriteStatsHTML(data)
+	assert.Empty(t, errs)
+	
+	result := buf.String()
+	assert.Contains(t, result, "host1")
+	assert.Contains(t, result, "ok=5")
+	assert.Contains(t, result, "changed=1")
 }
 
 func TestOutput_WriteStats(t *testing.T) {
@@ -270,22 +256,15 @@ func TestOutput_WriteStats(t *testing.T) {
 	var buf bytes.Buffer
 	output := ansiblesummary.NewOutput()
 	
-	// Use type assertion with the exact method signature
-	if setter, ok := output.(interface{ SetOutput(w io.Writer) }); ok {
-		setter.SetOutput(&buf)
-		
-		errs := output.WriteStats(data)
-		assert.Empty(t, errs)
-		
-		result := buf.String()
-		assert.Contains(t, result, "host1")
-		assert.Contains(t, result, "ok= 5")
-		assert.Contains(t, result, "changed=1")
-	} else {
-		// Test that the method doesn't error even if we can't capture output
-		errs := output.WriteStats(data)
-		assert.Empty(t, errs)
-	}
+	output.SetOutput(&buf)
+	
+	errs := output.WriteStats(data)
+	assert.Empty(t, errs)
+	
+	result := buf.String()
+	assert.Contains(t, result, "host1")
+	assert.Contains(t, result, "ok= 5")
+	assert.Contains(t, result, "changed=1")
 }
 
 func TestAnsibleSummary_PrintNameOfTaksNotOK(t *testing.T) {

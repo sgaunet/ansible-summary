@@ -5,16 +5,22 @@ vars:
 
 tasks:
   default:
+    desc: "List all tasks"
+    cmds:
+      - task -a
+
+  build:
+    desc: "Build the binary"
     cmds:
       - go mod download
-      - CGO_ENABLED=0 go build cmd/* -o ./{{.BINFILE}}
-      - upx ./{{.BINFILE}}
-    # silent: true
-    # sources:
-    # - ./**/*
-    # method: checksum
-    # generates:
-    #   - "{{.BINFILE}}"
+      - task: sqlc
+      - CGO_ENABLED=0 go build .
+
+  linter:
+    desc: "Run linter"
+    cmds:
+      - go generate ./...
+      - golangci-lint run
 
   snapshot:
     cmds:
