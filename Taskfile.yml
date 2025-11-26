@@ -21,7 +21,7 @@ tasks:
     cmds:
       - govulncheck ./...
 
-  linter:
+  lint:
     desc: "Run linter"
     cmds:
       - go generate ./...
